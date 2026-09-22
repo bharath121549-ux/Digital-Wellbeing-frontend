@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Digital Well-Being Ecosystem – Hybrid Learners</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --navy:#0a2342; --teal:#028090; --mint:#02c39a; --seafoam:#00a896;
+    --gold:#f4c842; --red:#e74c3c; --orange:#f39c12;
+    --bg:#f0f8ff; --card:#ffffff; --border:#d0e8ee; --text:#1a3347;
+    --muted:#5b7a8c; --light:#e8f5f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  
+  /* ── NAV ── */
+  nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+  .nav-brand{display:flex;align-items:center;gap:10px;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600}
+  .nav-brand svg{width:28px;height:28px}
+  .nav-links{display:flex;gap:6px}
+  .nav-link{background:none;border:none;color:rgba(255,255,255,.7);padding:6px 14px;border-radius:20px;cursor:pointer;font-size:.82rem;font-family:'DM Sans',sans-serif;transition:.2s}
+  .nav-link:hover,.nav-link.active{background:rgba(2,192,154,.2);color:var(--mint)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .alert-badge{position:relative;cursor:pointer}
+  .badge-dot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;background:var(--gold);border-radius:50%;animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+  .user-chip{background:rgba(2,192,154,.15);border:1px solid rgba(2,192,154,.3);color:var(--mint);border-radius:20px;padding:5px 14px;font-size:.8rem;font-weight:500}
+
+  /* ── LAYOUT ── */
+  .page{display:none;padding:2rem;max-width:1280px;margin:0 auto;animation:fadeIn .3s ease}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  h1{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:1.5rem}
+  h2{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;color:var(--navy);margin-bottom:1rem}
+  
+  /* ── CARDS ── */
+  .card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:1.25rem 1.5rem;box-shadow:0 2px 10px rgba(10,35,66,.06)}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-bottom:1.5rem}
+  .grid-1{display:grid;grid-template-columns:1fr;gap:1.25rem;margin-bottom:1.5rem}
+
+  /* ── STAT CARDS ── */
+  .stat-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:1.2rem 1.4rem;position:relative;overflow:hidden;box-shadow:0 2px 10px rgba(10,35,66,.05)}
+  .stat-card .accent{position:absolute;top:0;left:0;width:4px;height:100%;border-radius:14px 0 0 14px}
+  .stat-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:500;margin-bottom:.35rem}
+  .stat-value{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;line-height:1;margin-bottom:.35rem}
+  .stat-sub{font-size:.78rem;color:var(--muted)}
+  .stat-icon{position:absolute;top:1rem;right:1rem;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+
+  /* ── PROGRESS / BARS ── */
+  .progress-wrap{margin-bottom:1rem}
+  .progress-top{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:.35rem}
+  .progress-bar{height:8px;background:var(--light);border-radius:99px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+  /* ── MOOD RING ── */
+  .mood-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin-bottom:1.5rem}
+  .mood-btn{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:.85rem .5rem;text-align:center;cursor:pointer;transition:.2s;font-size:1.5rem;line-height:1}
+  .mood-btn span{display:block;font-size:.7rem;color:var(--muted);margin-top:.3rem;font-weight:500}
+  .mood-btn:hover{border-color:var(--teal);transform:translateY(-2px)}
+  .mood-btn.selected{border-color:var(--mint);background:rgba(2,195,154,.08)}
+
+  /* ── ALERT CARDS ── */
+  .alert-item{display:flex;gap:12px;padding:.85rem 1rem;border-radius:10px;margin-bottom:.6rem;align-items:flex-start}
+  .alert-item.warn{background:#fff8e1;border-left:3px solid var(--gold)}
+  .alert-item.danger{background:#fff0f0;border-left:3px solid var(--red)}
+  .alert-item.info{background:#e8f5f7;border-left:3px solid var(--teal)}
+  .alert-item.success{background:#e8faf3;border-left:3px solid var(--mint)}
+  .alert-icon{font-size:1.1rem;margin-top:1px;flex-shrink:0}
+  .alert-title{font-size:.85rem;font-weight:600;color:var(--navy);margin-bottom:2px}
+  .alert-text{font-size:.78rem;color:var(--muted)}
+  .alert-time{font-size:.7rem;color:var(--muted);margin-top:3px}
+
+  /* ── TIMER ── */
+  .timer-ring{text-align:center;padding:1.5rem 1rem}
+  .timer-svg{filter:drop-shadow(0 4px 16px rgba(2,128,144,.2))}
+  .timer-num{font-family:'Space Grotesk',sans-serif;font-size:2.6rem;font-weight:700;color:var(--navy);display:block;margin:.5rem 0 .2rem}
+  .timer-label{font-size:.8rem;color:var(--muted)}
+  .timer-btns{display:flex;gap:.75rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+  .btn{padding:.6rem 1.4rem;border-radius:8px;border:none;cursor:pointer;font-size:.82rem;font-weight:600;font-family:'DM Sans',sans-serif;transition:.15s}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:hover{background:var(--mint)}
+  .btn-outline{background:#fff;color:var(--teal);border:1.5px solid var(--teal)}
+  .btn-outline:hover{background:var(--light)}
+  .btn-danger{background:var(--red);color:#fff}
+  .btn-sm{padding:.4rem .9rem;font-size:.75rem}
+
+  /* ── AI CHAT ── */
+  .chat-window{height:320px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.75rem;background:#fafeff;scroll-behavior:smooth}
+  .msg{max-width:80%;margin-bottom:.85rem;animation:fadeIn .25s ease}
+  .msg.ai{margin-right:auto}
+  .msg.user{margin-left:auto}
+  .msg-bubble{padding:.7rem 1rem;border-radius:12px;font-size:.82rem;line-height:1.55}
+  .msg.ai .msg-bubble{background:var(--light);color:var(--text);border-radius:4px 12px 12px 12px}
+  .msg.user .msg-bubble{background:var(--teal);color:#fff;border-radius:12px 4px 12px 12px}
+  .msg-name{font-size:.68rem;color:var(--muted);margin-bottom:2px;font-weight:500}
+  .chat-input-row{display:flex;gap:.6rem}
+  .chat-input{flex:1;border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;font-size:.82rem;font-family:'DM Sans',sans-serif;outline:none;transition:.2s}
+  .chat-input:focus{border-color:var(--teal)}
+  .quick-chips{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem}
+  .chip{background:var(--light);border:1px solid var(--border);color:var(--teal);border-radius:20px;padding:.3rem .85rem;font-size:.75rem;cursor:pointer;transition:.15s;font-weight:500}
+  .chip:hover{background:rgba(2,128,144,.12)}
+
+  /* ── SCHEDULE ── */
+  .schedule-row{display:flex;gap:10px;align-items:center;padding:.7rem .9rem;border-radius:10px;margin-bottom:.5rem;transition:.2s;cursor:pointer}
+  .schedule-row:hover{background:var(--light)}
+  .sched-time{font-size:.75rem;color:var(--muted);min-width:70px;font-weight:500}
+  .sched-bar{width:4px;height:34px;border-radius:3px;flex-shrink:0}
+  .sched-title{font-size:.85rem;font-weight:600;color:var(--navy)}
+  .sched-sub{font-size:.72rem;color:var(--muted)}
+  .sched-badge{margin-left:auto;font-size:.68rem;padding:.25rem .7rem;border-radius:20px;font-weight:600}
+  .badge-online{background:#e8faf3;color:#0f6e56}
+  .badge-offline{background:#e8f0ff;color:#185fa5}
+  .badge-break{background:#fff8e1;color:#854f0b}
+
+  /* ── ANALYTICS TABLE ── */
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  th{text-align:left;padding:.6rem .8rem;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;border-bottom:1.5px solid var(--border)}
+  td{padding:.65rem .8rem;border-bottom:.5px solid var(--light);color:var(--text)}
+  tr:hover td{background:var(--light)}
+  .score-pill{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.72rem;font-weight:600}
+  .score-high{background:#e8faf3;color:#0f6e56}
+  .score-mid{background:#fff8e1;color:#854f0b}
+  .score-low{background:#fff0f0;color:#a32d2d}
+
+  /* ── BURNOUT GAUGE ── */
+  .gauge-wrap{text-align:center;padding:1rem}
+  .gauge-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+  
+  /* ── FOCUS MODE OVERLAY ── */
+  #focus-overlay{display:none;position:fixed;inset:0;background:rgba(10,35,66,.88);z-index:999;align-items:center;justify-content:center;flex-direction:column;backdrop-filter:blur(4px)}
+  #focus-overlay.open{display:flex}
+  .focus-box{background:#fff;border-radius:20px;padding:2.5rem;text-align:center;max-width:420px;width:90%}
+  .focus-circle{width:120px;height:120px;margin:0 auto 1.5rem;border-radius:50%;background:rgba(2,192,154,.1);border:4px solid var(--mint);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--teal)}
+  
+  /* ── NOTIFICATION TOAST ── */
+  #toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:.8rem 1.25rem;border-radius:12px;font-size:.82rem;z-index:9999;transform:translateY(100px);opacity:0;transition:.35s;display:flex;align-items:center;gap:.6rem;max-width:320px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+  #toast.show{transform:translateY(0);opacity:1}
+  #toast .t-icon{font-size:1rem}
+
+  /* ── LIVE INDICATOR ── */
+  .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--mint);margin-right:5px;animation:pulse 1.4s infinite}
+
+  /* ── WELL-BEING SCORE ── */
+  .wbs-ring{position:relative;display:inline-block}
+  .wbs-score{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+  .wbs-num{font-family:'Space Grotesk',sans-serif;font-size:1.9rem;font-weight:700;color:var(--navy)}
+  .wbs-max{font-size:.75rem;color:var(--muted)}
+
+  /* ── RECOMMENDATION CARDS ── */
+  .rec-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.65rem;transition:.2s;cursor:pointer}
+  .rec-card:hover{border-color:var(--teal);transform:translateX(3px)}
+  .rec-icon-wrap{width:38px;height:38px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+  .rec-title{font-size:.85rem;font-weight:600;color:var(--navy);margin-bottom:2px}
+  .rec-desc{font-size:.76rem;color:var(--muted);line-height:1.45}
+  .rec-priority{font-size:.68rem;padding:.2rem .6rem;border-radius:20px;font-weight:600;margin-top:.35rem;display:inline-block}
+
+  /* scrollbar */
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+  /* responsive */
+  @media(max-width:900px){.grid-4{grid-template-columns:repeat(2,1fr)}.grid-3{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
+  @media(max-width:600px){.grid-3,.grid-4{grid-template-columns:1fr}.nav-links{display:none}}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-brand">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 24s-9-5.5-9-12a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6.5-9 12-9 12z" fill="#02c39a" opacity=".9"/>
+      <polyline points="7,14 10,11 12,16 15,9 17,14 20,14" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    Digital Well-Being Ecosystem
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="navigate('dashboard')">Dashboard</button>
+    <button class="nav-link" onclick="navigate('mood')">Mood & Stress</button>
+    <button class="nav-link" onclick="navigate('screentime')">Screen Time</button>
+    <button class="nav-link" onclick="navigate('schedule')">Schedule</button>
+    <button class="nav-link" onclick="navigate('ai')">AI Coach</button>
+    <button class="nav-link" onclick="navigate('analytics')">Analytics</button>
+    <button class="nav-link" onclick="navigate('games')">🎮 Relax Games</button>
+  </div>
+  <div class="nav-right">
+    <div class="alert-badge" onclick="navigate('dashboard')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div class="badge-dot"></div>
+    </div>
+    <div class="user-chip">Catherine M.</div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 – DASHBOARD
+═══════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+  <h1><span class="live-dot"></span>Well-Being Dashboard</h1>
+
+  <!-- Stat Cards -->
+  <div class="grid-4">
+    <div class="stat-card">
+      <div class="accent" style="background:var(--mint)"></div>
+      <div class="stat-icon" style="background:rgba(2,192,154,.12)">💻</div>
+      <div class="stat-label">Screen Time Today</div>
+      <div class="stat-value" id="st-today" style="color:var(--teal)">4h 12m</div>
+      <div class="stat-sub">▲ 38 min vs yesterday</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--gold)"></div>
+      <div class="stat-icon" style="background:rgba(244,200,66,.12)">🧠</div>
+      <div class="stat-label">Stress Index</div>
+      <div class="stat-value" id="st-stress" style="color:var(--orange)">62%</div>
+      <div class="stat-sub" id="stress-status">Moderate — take a break soon</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--teal)"></div>
+      <div class="stat-icon" style="background:rgba(2,128,144,.12)">📚</div>
+      <div class="stat-label">Focus Sessions</div>
+      <div class="stat-value" style="color:var(--navy)">3 / 5</div>
+      <div class="stat-sub">2 remaining today</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--seafoam)"></div>
+      <div class="stat-icon" style="background:rgba(0,168,150,.12)">🏆</div>
+      <div class="stat-label">Well-Being Score</div>
+      <div class="stat-value" id="wbs-val" style="color:var(--mint)">74</div>
+      <div class="stat-sub">/ 100 · Good standing</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Screen Time Chart -->
+    <div class="card">
+      <h2>Screen Time — Last 7 Days</h2>
+      <div style="position:relative;height:220px">
+        <canvas id="chartScreenTime" role="img" aria-label="Bar chart of daily screen time over 7 days">Screen time data chart.</canvas>
+      </div>
+    </div>
+
+    <!-- Burnout Risk + Alerts -->
+    <div class="card">
+      <h2>Burnout Risk Level</h2>
+      <div style="display:flex;gap:1.5rem;align-items:center;margin-bottom:1rem">
+        <div class="wbs-ring">
+          <canvas id="chartBurnout" width="130" height="130" role="img" aria-label="Doughnut gauge showing burnout risk at 38%">Burnout risk: 38%</canvas>
+          <div class="wbs-score"><div class="wbs-num" id="burnout-val">38%</div><div class="wbs-max">risk</div></div>
+        </div>
+        <div style="flex:1">
+          <div class="alert-item info">
+            <div class="alert-icon">ℹ️</div>
+            <div>
+              <div class="alert-title">Learning Mode Active</div>
+              <div class="alert-text">You've been studying for 90 mins. Consider a 10-min break.</div>
+              <div class="alert-time">2 min ago</div>
+            </div>
+          </div>
+          <div class="alert-item warn">
+            <div class="alert-icon">⚠️</div>
+            <div>
+              <div class="alert-title">Screen Fatigue Detected</div>
+              <div class="alert-text">Blink rate analysis suggests eye strain building up.</div>
+              <div class="alert-time">18 min ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Digital Balance Score</span><span style="color:var(--mint);font-weight:600">71%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:71%;background:var(--mint)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Social Interaction</span><span style="color:var(--orange);font-weight:600">42%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:42%;background:var(--orange)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Physical Activity</span><span style="color:var(--teal);font-weight:600">58%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:58%;background:var(--teal)"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Recommendations row -->
+  <h2>AI-Powered Recommendations</h2>
+  <div class="grid-3" id="recs-grid">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 2 – MOOD & STRESS
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-mood">
+  <h1>Mood & Stress Monitor</h1>
+  <div class="grid-2">
+    <div class="card">
+      <h2>How are you feeling right now?</h2>
+      <div class="mood-grid">
+        <div class="mood-btn" onclick="selectMood(this,5,'Excellent')">😄<span>Excellent</span></div>
+        <div class="mood-btn" onclick="selectMood(this,4,'Good')">😊<span>Good</span></div>
+        <div class="mood-btn" onclick="selectMood(this,3,'Neutral')">😐<span>Neutral</span></div>
+        <div class="mood-btn" onclick="selectMood(this,2,'Tired')">😔<span>Tired</span></div>
+        <div class="mood-btn" onclick="selectMood(this,1,'Stressed')">😰<span>Stressed</span></div>
+      </div>
+      <div id="mood-feedback" style="background:var(--light);border-radius:10px;padding:1rem;font-size:.82rem;color:var(--muted);min-height:60px">
+        Select a mood to receive a personalized AI suggestion.
+      </div>
+      <div style="margin-top:1rem">
+        <div class="progress-wrap">
+          <div class="progress-top"><span>Current Stress Level</span><span id="stress-pct" style="color:var(--orange);font-weight:600">62%</span></div>
+          <div class="progress-bar"><div class="progress-fill" id="stress-bar" style="width:62%;background:linear-gradient(to right,var(--mint),var(--orange))"></div></div>
+        </div>
+        <div style="display:flex;gap:.5rem;margin-top:.75rem;flex-wrap:wrap">
+          <span style="font-size:.75rem;color:var(--muted)">Contributing factors:</span>
+          <span class="chip">Long screen time</span>
+          <span class="chip">Upcoming deadline</span>
+          <span class="chip">Less sleep</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>7-Day Mood Trend</h2>
+      <div style="position:relative;height:240px">
+        <canvas id="chartMood" role="img" aria-label="Line chart showing mood scores over 7 days">Mood trend chart.</canvas>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <span style="font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#028090;display:inline-block"></span>Mood Score</span>
+        <span style="font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#f39c12;display:inline-block"></span>Stress Level</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <h2>Relaxation Exercises</h2>
+      <div class="rec-card" onclick="startBreathing()">
+        <div class="rec-icon-wrap" style="background:rgba(2,192,154,.1)">🫁</div>
+        <div><div class="rec-title">Box Breathing</div><div class="rec-desc">4-4-4-4 pattern to calm nervous system</div><span class="rec-priority" style="background:#e8faf3;color:#0f6e56">High impact</span></div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-icon-wrap" style="background:rgba(2,128,144,.1)">👁️</div>
+        <div><div class="rec-title">20-20-20 Eye Rule</div><div class="rec-desc">Every 20 min, look 20 ft away for 20 sec</div><span class="rec-priority" style="background:#e8f0ff;color:#185fa5">Eye health</span></div>
+      </div>
+      <div class="rec-card">
+        <div class="rec-icon-wrap" style="background:rgba(244,200,66,.15)">🧘</div>
+        <div><div class="rec-title">Mindful Stretch</div><div class="rec-desc">5-min guided posture & stretch break</div><span class="rec-priority" style="background:#fff8e1;color:#854f0b">Physical</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Emotional Well-Being Indicators</h2>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Motivation</span><span style="color:var(--teal);font-weight:600">68%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--teal)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Engagement</span><span style="color:var(--mint);font-weight:600">75%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:75%;background:var(--mint)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Anxiety Level</span><span style="color:var(--red);font-weight:600">44%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:44%;background:var(--red)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Focus Quality</span><span style="color:var(--orange);font-weight:600">61%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:61%;background:var(--orange)"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-top"><span>Social Connection</span><span style="color:var(--teal);font-weight:600">53%</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:53%;background:var(--teal)"></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Stress Pattern (Hourly)</h2>
+      <div style="position:relative;height:220px">
+        <canvas id="chartStressHour" role="img" aria-label="Line chart showing hourly stress levels">Hourly stress levels.</canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 3 – SCREEN TIME
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-screentime">
+  <h1>Screen Time & Usage Tracking</h1>
+  <div class="grid-4">
+    <div class="stat-card">
+      <div class="accent" style="background:var(--teal)"></div>
+      <div class="stat-label">Total Today</div>
+      <div class="stat-value" style="color:var(--teal)">4h 12m</div>
+      <div class="stat-sub">Limit: 6h</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--mint)"></div>
+      <div class="stat-label">Productive</div>
+      <div class="stat-value" style="color:var(--mint)">2h 48m</div>
+      <div class="stat-sub">67% of screen time</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--orange)"></div>
+      <div class="stat-label">Distracted</div>
+      <div class="stat-value" style="color:var(--orange)">54m</div>
+      <div class="stat-sub">Social media & gaming</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--gold)"></div>
+      <div class="stat-label">Breaks Taken</div>
+      <div class="stat-value" style="color:var(--gold)">7</div>
+      <div class="stat-sub">Goal: 10 today</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>App Usage Breakdown</h2>
+      <div style="position:relative;height:280px">
+        <canvas id="chartApps" role="img" aria-label="Doughnut chart showing app usage by category">App usage breakdown.</canvas>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:1rem">
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#028090;display:inline-block"></span>Learning 44%</span>
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#02c39a;display:inline-block"></span>Productive 23%</span>
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#f39c12;display:inline-block"></span>Social 21%</span>
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#e74c3c;display:inline-block"></span>Entertainment 12%</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Pomodoro Focus Timer</h2>
+      <div class="timer-ring">
+        <svg class="timer-svg" width="160" height="160" viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="#e8f5f7" stroke-width="10"/>
+          <circle id="timer-progress" cx="80" cy="80" r="68" fill="none" stroke="#028090" stroke-width="10"
+            stroke-dasharray="427" stroke-dashoffset="0" stroke-linecap="round"
+            transform="rotate(-90 80 80)" style="transition:stroke-dashoffset .5s"/>
+        </svg>
+        <span class="timer-num" id="timer-display">25:00</span>
+        <span class="timer-label" id="timer-status-label">Focus Session</span>
+      </div>
+      <div class="timer-btns">
+        <button class="btn btn-primary" id="timerStartBtn" onclick="timerToggle()">▶️ Start</button>
+        <button class="btn btn-outline" onclick="timerReset()">↺ Reset</button>
+        <button class="btn btn-outline" onclick="openFocusMode()">🎯 Focus Mode</button>
+      </div>
+      <div style="margin-top:1.2rem;padding:1rem;background:var(--light);border-radius:10px">
+        <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">Today's sessions</div>
+        <div style="display:flex;gap:.4rem;flex-wrap:wrap">
+          <span style="background:var(--mint);width:24px;height:8px;border-radius:99px;display:inline-block;opacity:.9"></span>
+          <span style="background:var(--mint);width:24px;height:8px;border-radius:99px;display:inline-block;opacity:.9"></span>
+          <span style="background:var(--mint);width:24px;height:8px;border-radius:99px;display:inline-block;opacity:.9"></span>
+          <span style="background:var(--border);width:24px;height:8px;border-radius:99px;display:inline-block"></span>
+          <span style="background:var(--border);width:24px;height:8px;border-radius:99px;display:inline-block"></span>
+          <span style="font-size:.72rem;color:var(--muted);margin-left:4px;align-self:center">3/5 done</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Hourly Screen Time Distribution</h2>
+    <div style="position:relative;height:200px">
+      <canvas id="chartHourly" role="img" aria-label="Bar chart of hourly screen time distribution">Hourly screen time.</canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 4 – SCHEDULE
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-schedule">
+  <h1>Smart Schedule & Time Management</h1>
+  <div class="grid-2">
+    <div class="card">
+      <h2>Today's Schedule</h2>
+      <div id="schedule-list">
+        <div class="schedule-row"><div class="sched-time">08:00 AM</div><div class="sched-bar" style="background:#028090"></div><div><div class="sched-title">Morning Standup</div><div class="sched-sub">Online · Microsoft Teams</div></div><span class="sched-badge badge-online">Online</span></div>
+        <div class="schedule-row"><div class="sched-time">09:30 AM</div><div class="sched-bar" style="background:#02c39a"></div><div><div class="sched-title">Data Structures Lab</div><div class="sched-sub">Offline · Lab 3</div></div><span class="sched-badge badge-offline">Offline</span></div>
+        <div class="schedule-row"><div class="sched-time">11:00 AM</div><div class="sched-bar" style="background:#f4c842"></div><div><div class="sched-title">Break — Stretch</div><div class="sched-sub">Recommended break · 10 min</div></div><span class="sched-badge badge-break">Break</span></div>
+        <div class="schedule-row"><div class="sched-time">11:30 AM</div><div class="sched-bar" style="background:#028090"></div><div><div class="sched-title">AI/ML Lecture</div><div class="sched-sub">Online · Google Meet</div></div><span class="sched-badge badge-online">Online</span></div>
+        <div class="schedule-row"><div class="sched-time">01:00 PM</div><div class="sched-bar" style="background:#f4c842"></div><div><div class="sched-title">Lunch Break</div><div class="sched-sub">Away from screen · 45 min</div></div><span class="sched-badge badge-break">Break</span></div>
+        <div class="schedule-row"><div class="sched-time">02:00 PM</div><div class="sched-bar" style="background:#00a896"></div><div><div class="sched-title">Project Work (Deep Focus)</div><div class="sched-sub">Offline · Library / Personal</div></div><span class="sched-badge badge-offline">Offline</span></div>
+        <div class="schedule-row"><div class="sched-time">04:00 PM</div><div class="sched-bar" style="background:#028090"></div><div><div class="sched-title">Group Study Session</div><div class="sched-sub">Online · Zoom</div></div><span class="sched-badge badge-online">Online</span></div>
+        <div class="schedule-row"><div class="sched-time">05:30 PM</div><div class="sched-bar" style="background:#f4c842"></div><div><div class="sched-title">Evening Wind-Down</div><div class="sched-sub">No screen — recommended</div></div><span class="sched-badge badge-break">Break</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.25rem">
+        <h2>Weekly Balance</h2>
+        <div style="position:relative;height:220px">
+          <canvas id="chartWeekBalance" role="img" aria-label="Stacked bar chart showing online vs offline time per day">Weekly balance chart.</canvas>
+        </div>
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap">
+          <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#028090;display:inline-block"></span>Online (hrs)</span>
+          <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#02c39a;display:inline-block"></span>Offline (hrs)</span>
+          <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#f4c842;display:inline-block"></span>Break (hrs)</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>AI Schedule Insights</h2>
+        <div class="alert-item success">
+          <div class="alert-icon">✅</div>
+          <div><div class="alert-title">Good offline-to-online ratio today</div><div class="alert-text">Your offline hours (4.5h) balance your online sessions well.</div></div>
+        </div>
+        <div class="alert-item warn">
+          <div class="alert-icon">⚠️</div>
+          <div><div class="alert-title">No break scheduled at 3PM</div><div class="alert-text">You'll have 2 hours uninterrupted online. Add a micro-break.</div></div>
+        </div>
+        <div class="alert-item info">
+          <div class="alert-icon">💡</div>
+          <div><div class="alert-title">Peak focus time: 9–11 AM</div><div class="alert-text">Your productivity data shows best performance in morning hours.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 5 – AI COACH
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-ai">
+  <h1>AI Well-Being Coach</h1>
+  <div class="grid-2">
+    <div class="card">
+      <h2>Chat with your AI Coach</h2>
+      <div class="chat-window" id="chat-window">
+        <div class="msg ai">
+          <div class="msg-name">Well-Being AI 🤖</div>
+          <div class="msg-bubble">Hello Catherine! I'm your AI Well-Being Coach. I've analysed your activity patterns today — your screen time is 4h 12m and stress index is at 62%. How can I help you feel better and perform at your best?</div>
+        </div>
+        <div class="msg ai">
+          <div class="msg-name">Well-Being AI 🤖</div>
+          <div class="msg-bubble">Based on your data, I recommend a 10-minute break now. You've had continuous screen exposure for 87 minutes. Shall I start a guided breathing exercise?</div>
+        </div>
+      </div>
+      <div class="quick-chips">
+        <span class="chip" onclick="sendQuick('I feel stressed and tired')">😓 I feel stressed</span>
+        <span class="chip" onclick="sendQuick('Give me a productivity tip')">💡 Productivity tip</span>
+        <span class="chip" onclick="sendQuick('Start a break reminder')">⏰ Break reminder</span>
+        <span class="chip" onclick="sendQuick('How is my well-being score?')">📊 My score</span>
+        <span class="chip" onclick="sendQuick('Suggest a study plan for today')">📚 Study plan</span>
+        <span class="chip" onclick="sendQuick('I cannot focus on my work')">🎯 Focus help</span>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" placeholder="Ask your AI coach anything…" onkeydown="if(event.key==='Enter')sendChat()"/>
+        <button class="btn btn-primary" onclick="sendChat()">Send</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:1.25rem">
+        <h2>Today's Personalized Recommendations</h2>
+        <div class="rec-card">
+          <div class="rec-icon-wrap" style="background:rgba(2,192,154,.12)">🫁</div>
+          <div><div class="rec-title">Box Breathing — 4 min</div><div class="rec-desc">Reduces cortisol levels. Best done now given your 62% stress index.</div><span class="rec-priority" style="background:#e8faf3;color:#0f6e56">Urgent</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon-wrap" style="background:rgba(2,128,144,.12)">🚶</div>
+          <div><div class="rec-title">5-Minute Walk Break</div><div class="rec-desc">Physical movement resets your focus cycle. Take a short walk outdoors.</div><span class="rec-priority" style="background:#e8f0ff;color:#185fa5">Recommended</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon-wrap" style="background:rgba(244,200,66,.15)">💧</div>
+          <div><div class="rec-title">Hydration Check</div><div class="rec-desc">You likely haven't had water in 2 hours. Dehydration worsens focus by 20%.</div><span class="rec-priority" style="background:#fff8e1;color:#854f0b">Health</span></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon-wrap" style="background:rgba(231,76,60,.1)">🌙</div>
+          <div><div class="rec-title">Wind-Down at 9 PM</div><div class="rec-desc">No blue-light screens after 9PM. Use reading or journaling instead.</div><span class="rec-priority" style="background:#fff0f0;color:#a32d2d">Sleep</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>AI Confidence Scores</h2>
+        <div class="progress-wrap">
+          <div class="progress-top"><span>Burnout Prediction Accuracy</span><span style="color:var(--mint);font-weight:600">87%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:87%;background:var(--mint)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-top"><span>Mood Model Accuracy</span><span style="color:var(--teal);font-weight:600">79%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:79%;background:var(--teal)"></div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-top"><span>Recommendation Relevance</span><span style="color:var(--seafoam);font-weight:600">82%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:82%;background:var(--seafoam)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 6 – ANALYTICS
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-analytics">
+  <h1>Learning Analytics & Performance</h1>
+  <div class="grid-4" style="margin-bottom:1.5rem">
+    <div class="stat-card">
+      <div class="accent" style="background:var(--mint)"></div>
+      <div class="stat-label">Academic Score</div>
+      <div class="stat-value" style="color:var(--mint)">82%</div>
+      <div class="stat-sub">▲ 6% this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--teal)"></div>
+      <div class="stat-label">Avg Focus/Session</div>
+      <div class="stat-value" style="color:var(--teal)">34m</div>
+      <div class="stat-sub">Goal: 45 min</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--orange)"></div>
+      <div class="stat-label">Digital Addiction Risk</div>
+      <div class="stat-value" style="color:var(--orange)">Low</div>
+      <div class="stat-sub">Score: 28 / 100</div>
+    </div>
+    <div class="stat-card">
+      <div class="accent" style="background:var(--gold)"></div>
+      <div class="stat-label">Streak</div>
+      <div class="stat-value" style="color:var(--gold)">12 days</div>
+      <div class="stat-sub">Well-being goals met</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>Performance vs Well-Being Correlation</h2>
+      <div style="position:relative;height:260px">
+        <canvas id="chartCorrelation" role="img" aria-label="Line chart showing academic performance vs well-being score over weeks">Correlation chart.</canvas>
+      </div>
+      <div style="display:flex;gap:1rem;justify-content:center;margin-top:.75rem;flex-wrap:wrap">
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#028090;display:inline-block"></span>Academic %</span>
+        <span style="font-size:.75rem;display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#02c39a;display:inline-block"></span>Well-Being Score</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Monthly Well-Being Dimensions</h2>
+      <div style="position:relative;height:260px">
+        <canvas id="chartRadar" role="img" aria-label="Radar chart showing well-being dimensions">Well-being dimensions radar.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Student Well-Being Report — Last 30 Days</h2>
+    <table>
+      <thead><tr><th>Week</th><th>Screen Time (Avg/day)</th><th>Stress Index</th><th>Focus Sessions</th><th>Academic Score</th><th>Well-Being Score</th></tr></thead>
+      <tbody>
+        <tr><td>Week 1</td><td>5h 40m</td><td><span class="score-pill score-low">78%</span></td><td>2.1 / day</td><td>71%</td><td><span class="score-pill score-mid">61</span></td></tr>
+        <tr><td>Week 2</td><td>5h 10m</td><td><span class="score-pill score-mid">68%</span></td><td>2.8 / day</td><td>74%</td><td><span class="score-pill score-mid">66</span></td></tr>
+        <tr><td>Week 3</td><td>4h 45m</td><td><span class="score-pill score-mid">61%</span></td><td>3.2 / day</td><td>78%</td><td><span class="score-pill score-high">71</span></td></tr>
+        <tr><td>Week 4 (now)</td><td>4h 12m</td><td><span class="score-pill score-mid">62%</span></td><td>3.0 / day</td><td>82%</td><td><span class="score-pill score-high">74</span></td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:1rem;padding:.85rem;background:rgba(2,192,154,.07);border-radius:10px;border-left:3px solid var(--mint)">
+      <div style="font-size:.82rem;font-weight:600;color:var(--teal);margin-bottom:4px">AI Insight</div>
+      <div style="font-size:.78rem;color:var(--muted)">Your data shows a <strong style="color:var(--teal)">strong positive correlation (+0.81)</strong> between reduced screen time, lower stress, and improved academic scores. Maintaining current habits for 2 more weeks should push your well-being score above 80.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOCUS MODE OVERLAY
+═══════════════════════════════════════════════════════════ -->
+<div id="focus-overlay">
+  <div class="focus-box">
+    <div style="font-size:1.3rem;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--navy);margin-bottom:.5rem">Focus Mode Active</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:1.5rem">All distractions blocked. Stay in the zone.</div>
+    <div class="focus-circle" id="focus-timer-display">25:00</div>
+    <div style="font-size:.8rem;color:var(--muted);margin-bottom:1.5rem" id="focus-phase">Deep Work Session</div>
+    <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="closeFocusMode()">End Focus Mode</button>
+      <button class="btn btn-outline" onclick="addFiveMinutes()">+5 minutes</button>
+    </div>
+    <div style="margin-top:1.5rem;font-size:.76rem;color:var(--muted)">Tip: Close all other tabs. Every distraction costs 23 min of refocus time.</div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"><span class="t-icon">🔔</span><span id="toast-msg">Break reminder!</span></div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════ -->
+<script>
+// ── NAVIGATION ────────────────────────────────────────────────
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const map = {dashboard:0,mood:1,screentime:2,schedule:3,ai:4,analytics:5,games:6};
+  const links = document.querySelectorAll('.nav-link');
+  if (map[page] !== undefined) links[map[page]].classList.add('active');
+  if (page === 'games') initGamesPage();
+}
+
+// ── TOAST ────────────────────────────────────────────────────
+function showToast(msg, duration=3500) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── MOOD ─────────────────────────────────────────────────────
+const moodMessages = {
+  5: "Excellent! You're in your best state. Leverage this for deep work or creative tasks. Keep this energy going!",
+  4: "You're feeling good! Great time for collaborative work, presentations, or problem-solving sessions.",
+  3: "Feeling neutral is okay. Try a 5-minute walk or some water. Light tasks work well now.",
+  2: "You seem tired. Please take a 15-minute break, avoid screens briefly, and do light stretching. Don't push through exhaustion.",
+  1: "Stress detected. Close non-essential tabs, do 4-7-8 breathing, and consider talking to a friend or counsellor. Your well-being matters."
+};
+function selectMood(el, score, label) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  const fb = document.getElementById('mood-feedback');
+  fb.style.background = score >= 4 ? 'rgba(2,192,154,.1)' : score === 3 ? 'rgba(244,200,66,.1)' : 'rgba(231,76,60,.08)';
+  fb.style.color = score >= 4 ? '#0f6e56' : score === 3 ? '#854f0b' : '#a32d2d';
+  fb.textContent = moodMessages[score];
+  showToast('Mood logged: ' + label + ' (' + score + '/5)');
+  const s = Math.round((6 - score) * 18 + Math.random() * 8);
+  document.getElementById('stress-pct').textContent = s + '%';
+  document.getElementById('stress-bar').style.width = s + '%';
+}
+
+// ── TIMER ────────────────────────────────────────────────────
+let timerSecs = 25 * 60, timerRunning = false, timerInterval = null;
+const TOTAL = 25 * 60;
+function updateTimerDisplay() {
+  const m = Math.floor(timerSecs / 60), s = timerSecs % 60;
+  const str = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  document.getElementById('timer-display').textContent = str;
+  document.getElementById('focus-timer-display').textContent = str;
+  const prog = document.getElementById('timer-progress');
+  const circ = 2 * Math.PI * 68;
+  prog.style.strokeDasharray = circ;
+  prog.style.strokeDashoffset = circ * (timerSecs / TOTAL);
+  prog.style.stroke = timerSecs < 300 ? '#e74c3c' : '#028090';
+}
+function timerToggle() {
+  timerRunning = !timerRunning;
+  document.getElementById('timerStartBtn').textContent = timerRunning ? '⏸ Pause' : '▶️ Resume';
+  if (timerRunning) {
+    timerInterval = setInterval(() => {
+      timerSecs--;
+      updateTimerDisplay();
+      if (timerSecs === 0) { clearInterval(timerInterval); timerRunning = false; document.getElementById('timerStartBtn').textContent = '▶️ Start'; showToast('Focus session complete! Take a 5-min break.', 5000); }
+    }, 1000);
+  } else { clearInterval(timerInterval); }
+}
+function timerReset() { clearInterval(timerInterval); timerRunning = false; timerSecs = TOTAL; updateTimerDisplay(); document.getElementById('timerStartBtn').textContent = '▶️ Start'; }
+function openFocusMode() { document.getElementById('focus-overlay').classList.add('open'); if (!timerRunning) timerToggle(); }
+function closeFocusMode() { document.getElementById('focus-overlay').classList.remove('open'); }
+function addFiveMinutes() { timerSecs += 300; updateTimerDisplay(); showToast('+5 minutes added to focus session'); }
+updateTimerDisplay();
+
+// ── BREATHING OVERLAY ────────────────────────────────────────
+function startBreathing() { showToast('Box Breathing started: Inhale 4s → Hold 4s → Exhale 4s → Hold 4s', 6000); }
+
+// ── AI CHAT ──────────────────────────────────────────────────
+const responses = {
+  stress: [
+    "I can hear that you're stressed. Let me help. First, take 3 deep breaths right now. Then: 1) Close any non-essential tabs 2) Drink some water 3) Identify the one most important task. Would you like a guided breathing exercise?",
+    "Stress in hybrid learning is very common. Your current stress index is 62%. Try the 5-4-3-2-1 grounding technique: name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, and 1 you can taste."
+  ],
+  productivity: [
+    "Based on your data, your peak focus window is 9–11 AM. For best productivity: use Pomodoro (25 min work, 5 min break), tackle your hardest task first, and keep your phone in another room during study time.",
+    "Your focus sessions average 34 minutes — great! To reach 45-minute sessions, try incrementing by 5 minutes each week. Also, ambient sounds like brown noise can boost focus by up to 15%."
+  ],
+  break: [
+    "Break reminder set! I'll alert you every 45 minutes. During your break, try: standing up, looking at something 20 feet away for 20 seconds (20-20-20 rule), doing 5 neck rolls, and drinking water.",
+    "You've been at the screen for a while. Here are quick break activities: 5-min walk, 3-min stretching, 2-min cold water face splash, or simply close your eyes and breathe for 2 minutes."
+  ],
+  score: [
+    "Your current Well-Being Score is 74/100 — that's Good! 📈 Breakdown: Screen Balance 71%, Mental Health 68%, Physical Activity 58%, Academic Performance 82%, Social Connection 53%. Biggest opportunity: increase physical activity and social interaction to push your score above 80.",
+  ],
+  study: [
+    "Here's your personalised study plan: 9–11 AM: Deep work (hardest subject, Pomodoro ×2), 11–11:10: Break, 11:10 AM–1 PM: Reading & notes, 1–2 PM: Lunch & walk, 2–4 PM: Group or project work, 4–4:10: Break, 4:10–6 PM: Review & practice problems. Finish by 6 PM for balance.",
+  ],
+  focus: [
+    "Focus difficulty is often caused by digital overload. Try this: close all apps except the ONE you need, use the Pomodoro timer (25-min sprint), put your phone face-down, and tell yourself 'I only need to focus for 25 minutes'. Would you like me to start the timer for you?",
+  ],
+  default: [
+    "That's a great question! Based on your current well-being data (stress: 62%, screen time: 4h 12m, focus sessions: 3/5), I'd recommend prioritising breaks and hydration right now. Is there a specific aspect of your well-being you'd like to improve?",
+    "I've analysed your patterns from the past 7 days. Your overall trajectory is positive — academic scores are up 6% and screen time is trending down. Keep up the consistency! What would you like to focus on today?",
+  ]
+};
+function getAIResponse(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('stress') || m.includes('tired') || m.includes('anxious')) return pick(responses.stress);
+  if (m.includes('product') || m.includes('tip') || m.includes('focus') || m.includes('cannot')) return pick(responses.focus);
+  if (m.includes('break') || m.includes('reminder')) return pick(responses.break);
+  if (m.includes('score') || m.includes('well-being') || m.includes('how')) return pick(responses.score);
+  if (m.includes('study') || m.includes('plan')) return pick(responses.study);
+  if (m.includes('productivity')) return pick(responses.productivity);
+  return pick(responses.default);
+}
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function addMsg(text, type) {
+  const w = document.getElementById('chat-window');
+  const div = document.createElement('div');
+  div.className = 'msg ' + type;
+  div.innerHTML = (type === 'ai' ? '<div class="msg-name">Well-Being AI 🤖</div>' : '') + '<div class="msg-bubble">' + text + '</div>';
+  w.appendChild(div);
+  w.scrollTop = w.scrollHeight;
+}
+function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  addMsg(msg, 'user');
+  inp.value = '';
+  setTimeout(() => { addMsg('Thinking…', 'ai'); }, 200);
+  setTimeout(() => {
+    const last = document.getElementById('chat-window').querySelectorAll('.msg.ai');
+    last[last.length - 1].querySelector('.msg-bubble').textContent = getAIResponse(msg);
+  }, 1100);
+}
+function sendQuick(msg) { document.getElementById('chat-input').value = msg; sendChat(); navigate('ai'); }
+
+// ── RECOMMENDATIONS ───────────────────────────────────────────
+const recs = [
+  { icon:'🫁', bg:'rgba(2,192,154,.1)', title:'Box Breathing Now', desc:'Stress at 62% — a 4-min session will lower cortisol and improve focus quality.', priority:'Urgent', pc:'#e8faf3', tc:'#0f6e56' },
+  { icon:'👁️', bg:'rgba(2,128,144,.1)', title:'20-20-20 Eye Break', desc:'Last triggered 22 min ago. Look at something 20 feet away for 20 seconds.', priority:'Eye health', pc:'#e8f0ff', tc:'#185fa5' },
+  { icon:'💧', bg:'rgba(244,200,66,.15)', title:'Hydrate Now', desc:'Estimated 2.5 hours since last water intake. Drink 300ml for a 12% focus boost.', priority:'Physical', pc:'#fff8e1', tc:'#854f0b' },
+  { icon:'📴', bg:'rgba(231,76,60,.08)', title:'Phone-Free Zone', desc:'Place phone in another room for the next 25-minute Pomodoro session.', priority:'Focus', pc:'#fff0f0', tc:'#a32d2d' },
+  { icon:'🚶', bg:'rgba(0,168,150,.1)', title:'5-Min Walk', desc:'Movement resets focus cycle. A short walk outdoors can boost mood by 20%.', priority:'Wellbeing', pc:'#e8faf3', tc:'#0f6e56' },
+  { icon:'🌙', bg:'rgba(10,35,66,.07)', title:'Wind-Down Plan', desc:'Set your digital cut-off to 9 PM tonight for better sleep quality and next-day performance.', priority:'Sleep', pc:'#f0f4ff', tc:'#185fa5' },
+];
+function renderRecs() {
+  const g = document.getElementById('recs-grid');
+  g.innerHTML = recs.map(r => `
+    <div class="rec-card" style="flex-direction:column;gap:.5rem">
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <div class="rec-icon-wrap" style="background:${r.bg}">${r.icon}</div>
+        <div class="rec-title">${r.title}</div>
+      </div>
+      <div class="rec-desc">${r.desc}</div>
+      <span class="rec-priority" style="background:${r.pc};color:${r.tc}">${r.priority}</span>
+    </div>`).join('');
+}
+renderRecs();
+
+// ── LIVE DATA SIMULATION ──────────────────────────────────────
+let screenMinutes = 252;
+setInterval(() => {
+  screenMinutes++;
+  const h = Math.floor(screenMinutes / 60), m = screenMinutes % 60;
+  document.getElementById('st-today').textContent = h + 'h ' + m + 'm';
+  const stress = 55 + Math.round(Math.sin(Date.now() / 60000) * 8 + Math.random() * 5);
+  document.getElementById('st-stress').textContent = stress + '%';
+  if (stress > 70) { document.getElementById('stress-status').textContent = '⚠ High — take a break now'; showToast('High stress detected! Take a break.'); }
+  else if (stress > 55) document.getElementById('stress-status').textContent = 'Moderate — take a break soon';
+  else document.getElementById('stress-status').textContent = 'Low — you\'re doing well!';
+  const wbs = Math.round(100 - stress * 0.35 - (screenMinutes / 60) * 2.5 + 25);
+  document.getElementById('wbs-val').textContent = Math.min(99, Math.max(40, wbs));
+}, 8000);
+
+// Break reminder every 3 min
+setTimeout(() => showToast('⏰ 45 min elapsed — time for a short break!'), 180000);
+
+// ── CHARTS ────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  const teal = '#028090', mint = '#02c39a', gold = '#f4c842', orange = '#f39c12', red = '#e74c3c', navy = '#0a2342';
+  const gridColor = 'rgba(0,168,150,.1)', textColor = '#5b7a8c';
+  const baseOpts = (title) => ({
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { backgroundColor: navy, titleColor: '#fff', bodyColor: '#adc8d8', padding: 10, cornerRadius: 8 } },
+    scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } } }
+  });
+
+  // Screen Time Bar
+  new Chart(document.getElementById('chartScreenTime'), {
+    type: 'bar',
+    data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [{ data: [5.5, 6.1, 4.8, 5.2, 4.7, 3.1, 4.2], backgroundColor: [teal,teal,teal,teal,teal,mint,mint], borderRadius: 6 }] },
+    options: { ...baseOpts(), plugins: { legend: { display: false }, tooltip: { callbacks: { label: v => v.raw + 'h screen time' } } } }
+  });
+
+  // Burnout Doughnut
+  const bCtx = document.getElementById('chartBurnout');
+  new Chart(bCtx, {
+    type: 'doughnut',
+    data: { datasets: [{ data: [38, 62], backgroundColor: [red, '#e8f5f7'], borderWidth: 0, cutout: '78%' }] },
+    options: { responsive: false, plugins: { legend: { display: false }, tooltip: { enabled: false } } }
+  });
+
+  // Mood Line
+  new Chart(document.getElementById('chartMood'), {
+    type: 'line',
+    data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [
+        { data: [3,4,3,2,4,5,4], borderColor: teal, backgroundColor: 'rgba(2,128,144,.08)', fill: true, tension: .4, pointBackgroundColor: teal, pointRadius: 4, label: 'Mood' },
+        { data: [55,60,68,75,62,40,62], borderColor: orange, backgroundColor: 'rgba(243,156,18,.05)', fill: false, tension: .4, pointBackgroundColor: orange, pointRadius: 4, label: 'Stress %', yAxisID: 'y2' }
+      ]
+    },
+    options: { ...baseOpts(), scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, min: 1, max: 5 }, y2: { position: 'right', grid: { display: false }, ticks: { color: textColor, font: { size: 11 } }, min: 0, max: 100 } }, plugins: { legend: { display: false } } }
+  });
+
+  // Stress Hourly
+  new Chart(document.getElementById('chartStressHour'), {
+    type: 'line',
+    data: { labels: ['6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm'],
+      datasets: [{ data: [20,25,35,45,50,62,58,40,55,65,60,52,45], borderColor: orange, backgroundColor: 'rgba(243,156,18,.08)', fill: true, tension: .4, pointRadius: 3, pointBackgroundColor: orange }] },
+    options: { ...baseOpts(), plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } }, min: 0, max: 100 } } }
+  });
+
+  // App Doughnut
+  new Chart(document.getElementById('chartApps'), {
+    type: 'doughnut',
+    data: { labels: ['Learning','Productive','Social','Entertainment'],
+      datasets: [{ data: [44, 23, 21, 12], backgroundColor: [teal, mint, gold, red], borderWidth: 2, borderColor: '#fff' }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '60%' }
+  });
+
+  // Hourly screen time
+  new Chart(document.getElementById('chartHourly'), {
+    type: 'bar',
+    data: { labels: ['6am','7am','8am','9am','10am','11am','12pm','1pm','2pm','3pm','4pm','5pm','6pm','7pm','8pm','9pm'],
+      datasets: [{ data: [0,0.2,0.5,0.9,0.95,0.8,0.6,0.2,0.85,0.9,0.8,0.7,0.5,0.4,0.3,0.1], backgroundColor: (ctx) => ctx.raw > 0.75 ? orange : teal, borderRadius: 5 }] },
+    options: { ...baseOpts(), plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 }, callback: v => v + 'h' }, max: 1.1 } } }
+  });
+
+  // Weekly Balance
+  new Chart(document.getElementById('chartWeekBalance'), {
+    type: 'bar',
+    data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+      datasets: [
+        { label: 'Online', data: [4,5,3.5,4,3.5,2,3], backgroundColor: teal, borderRadius: 4 },
+        { label: 'Offline', data: [3,2.5,3,3,3.5,4,3], backgroundColor: mint, borderRadius: 4 },
+        { label: 'Break', data: [1.5,1.5,2,1.5,1.5,2,2], backgroundColor: gold, borderRadius: 4 }
+      ]
+    },
+    options: { ...baseOpts(), scales: { x: { stacked: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } }, y: { stacked: true, grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, max: 12 } }, plugins: { legend: { display: false } } }
+  });
+
+  // Correlation
+  new Chart(document.getElementById('chartCorrelation'), {
+    type: 'line',
+    data: { labels: ['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8'],
+      datasets: [
+        { data: [68,70,72,71,75,78,80,82], borderColor: teal, backgroundColor: 'rgba(2,128,144,.07)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: teal, label: 'Academic' },
+        { data: [61,64,66,68,69,72,73,74], borderColor: mint, backgroundColor: 'transparent', fill: false, tension: .4, pointRadius: 4, pointBackgroundColor: mint, label: 'Well-Being' }
+      ]
+    },
+    options: { ...baseOpts(), plugins: { legend: { display: false } }, scales: { x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } }, y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, min: 55, max: 90 } } }
+  });
+
+  // Radar
+  new Chart(document.getElementById('chartRadar'), {
+    type: 'radar',
+    data: { labels: ['Mental Health','Physical','Social','Academic','Digital Balance','Sleep Quality'],
+      datasets: [{ data: [68, 58, 53, 82, 71, 65], borderColor: teal, backgroundColor: 'rgba(2,128,144,.15)', pointBackgroundColor: teal, pointRadius: 4 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { grid: { color: gridColor }, ticks: { display: false }, pointLabels: { color: textColor, font: { size: 11 } }, min: 0, max: 100 } } }
+  });
+});
+
+
+// ── GAMES PAGE INIT ───────────────────────────────────────────
+let gamesInitDone = false;
+function initGamesPage() {
+  if (gamesInitDone) return;
+  gamesInitDone = true;
+  initMemory();
+  initColors();
+  initZenCanvas();
+}
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 7 – RELAX GAMES
+═══════════════════════════════════════════════════════════ -->
+<style>
+  /* ── GAMES PAGE ── */
+  .game-hero{background:var(--navy);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  .game-hero-text h1{color:#fff;margin-bottom:.3rem;font-size:1.5rem}
+  .game-hero-text p{color:rgba(255,255,255,.6);font-size:.85rem;max-width:520px}
+  .game-stats-row{display:flex;gap:12px;flex-wrap:wrap}
+  .gstat{background:rgba(255,255,255,.08);border-radius:10px;padding:.6rem 1rem;text-align:center;min-width:80px}
+  .gstat-val{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;color:var(--mint)}
+  .gstat-label{font-size:.7rem;color:rgba(255,255,255,.5);margin-top:2px}
+
+  .game-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+  .game-tab{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.65rem 1.2rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:600;color:var(--muted)}
+  .game-tab:hover{border-color:var(--teal);color:var(--teal)}
+  .game-tab.active{background:rgba(2,128,144,.08);border-color:var(--teal);color:var(--teal)}
+  .game-tab .tab-icon{font-size:1.2rem}
+  .game-tab .tab-badge{background:var(--mint);color:#fff;border-radius:20px;padding:1px 7px;font-size:.65rem;font-weight:700}
+
+  .game-pane{display:none}
+  .game-pane.active{display:block;animation:fadeIn .3s ease}
+
+  /* score strip */
+  .gscore-strip{display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+  .gscore{background:var(--light);border-radius:10px;padding:.6rem 1rem;min-width:80px}
+  .gscore-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+  .gscore-val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--navy)}
+  .gmsg{font-size:.83rem;color:var(--muted);margin-bottom:.85rem;min-height:20px;padding:.5rem .75rem;background:var(--light);border-radius:8px}
+
+  /* ── BUBBLE POP ── */
+  #g-bubble-field{position:relative;width:100%;height:380px;border-radius:14px;background:var(--light);overflow:hidden;border:1px solid var(--border)}
+  .gbubble{position:absolute;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;border:2px solid transparent;transition:transform .12s,opacity .25s}
+  .gbubble:hover{transform:scale(1.12)}
+  .gbubble:active{transform:scale(.8)}
+
+  /* ── MEMORY ── */
+  #g-mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:440px;margin:0 auto 1rem}
+  .gmcard{height:80px;border-radius:12px;border:1.5px solid var(--border);background:var(--light);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:2rem;transition:.25s;user-select:none}
+  .gmcard.flip{background:var(--card);border-color:var(--teal)}
+  .gmcard.matched{background:#e8faf3;border-color:var(--mint);cursor:default}
+  .gmcard.shake{animation:gshake .3s}
+  @keyframes gshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+  /* ── BREATHING ORB ── */
+  .breath-wrap{display:flex;flex-direction:column;align-items:center;padding:1rem}
+  #g-breath-orb{width:180px;height:180px;border-radius:50%;background:rgba(2,128,144,.12);border:3px solid var(--teal);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:transform 1s ease-in-out,background .6s;margin-bottom:1rem}
+  .orb-word{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;color:var(--teal)}
+  .orb-count{font-size:2rem;font-weight:700;font-family:'Space Grotesk',sans-serif;color:var(--navy);line-height:1}
+  .phase-row{display:flex;gap:10px;margin-bottom:1rem}
+  .phdot{width:12px;height:12px;border-radius:50%;background:var(--border);transition:.3s}
+  .phdot.active{background:var(--teal);transform:scale(1.3)}
+  .pattern-btns{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-top:1rem}
+  .pat-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.5rem .8rem;font-size:.75rem;font-weight:600;color:var(--muted);cursor:pointer}
+  .pat-btn.active{background:rgba(2,128,144,.08);border-color:var(--teal);color:var(--teal)}
+  .game-cta{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-top:1rem}
+  .col-swatch{width:36px;height:36px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.2s}
+  .col-swatch.active{border-color:var(--navy);transform:scale(1.1)}
+</style>
+
+<div class="page" id="page-games">
+  <div class="game-hero">
+    <div class="game-hero-text">
+      <h1>Relax & Reset</h1>
+      <p>Short digital breaks designed to lower stress, improve focus, and help you recover between study sessions.</p>
+    </div>
+    <div class="game-stats-row">
+      <div class="gstat">
+        <div class="gstat-val" id="g-score-total">0</div>
+        <div class="gstat-label">Score</div>
+      </div>
+      <div class="gstat">
+        <div class="gstat-val">3</div>
+        <div class="gstat-label">Modes</div>
+      </div>
+      <div class="gstat">
+        <div class="gstat-val">5 min</div>
+        <div class="gstat-label">Break</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="game-tabs">
+    <button class="game-tab active" onclick="switchGameTab('bubble')"><span class="tab-icon">🫧</span>Bubble Pop <span class="tab-badge">10</span></button>
+    <button class="game-tab" onclick="switchGameTab('memory')"><span class="tab-icon">🧠</span>Memory Match</button>
+    <button class="game-tab" onclick="switchGameTab('breath')"><span class="tab-icon">🌬️</span>Breathing</button>
+  </div>
+
+  <div class="game-pane active" id="pane-bubble">
+    <div class="gscore-strip">
+      <div class="gscore"><div class="gscore-label">Score</div><div class="gscore-val" id="bubble-score">0</div></div>
+      <div class="gscore"><div class="gscore-label">Time</div><div class="gscore-val" id="bubble-time">30</div></div>
+      <div class="gscore"><div class="gscore-label">Best</div><div class="gscore-val" id="bubble-best">0</div></div>
+    </div>
+    <div class="gmsg" id="bubble-msg">Pop the bubbles to calm your mind.</div>
+    <div id="g-bubble-field"></div>
+  </div>
+
+  <div class="game-pane" id="pane-memory">
+    <div class="gscore-strip">
+      <div class="gscore"><div class="gscore-label">Moves</div><div class="gscore-val" id="mem-moves">0</div></div>
+      <div class="gscore"><div class="gscore-label">Matches</div><div class="gscore-val" id="mem-matches">0</div></div>
+      <div class="gscore"><div class="gscore-label">Best</div><div class="gscore-val" id="mem-best">0</div></div>
+    </div>
+    <div class="gmsg" id="mem-msg">Match all the cards to clear your mind.</div>
+    <div id="g-mem-grid"></div>
+    <div class="game-cta">
+      <button class="btn btn-primary" onclick="initMemory()">New Game</button>
+    </div>
+  </div>
+
+  <div class="game-pane" id="pane-breath">
+    <div class="breath-wrap">
+      <div id="g-breath-orb">
+        <div class="orb-word" id="orb-word">Breathe</div>
+        <div class="orb-count" id="orb-count">4</div>
+      </div>
+      <div class="phase-row">
+        <span class="phdot active"></span>
+        <span class="phdot"></span>
+        <span class="phdot"></span>
+        <span class="phdot"></span>
+      </div>
+      <div class="gmsg" id="breath-msg">Follow the rhythm: inhale for 4, hold for 4, exhale for 4, hold for 4.</div>
+      <div class="pattern-btns">
+        <button class="pat-btn active" data-pattern="4-4-4-4">4-4-4-4</button>
+        <button class="pat-btn" data-pattern="5-5-5-5">5-5-5-5</button>
+        <button class="pat-btn" data-pattern="4-6-8">4-6-8</button>
+      </div>
+      <div class="game-cta">
+        <button class="btn btn-primary" onclick="startBreathingCycle()">Start</button>
+        <button class="btn btn-outline" onclick="pauseBreathingCycle()">Pause</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function switchGameTab(tabName) {
+  document.querySelectorAll('.game-tab').forEach(tab => tab.classList.toggle('active', tab.textContent.includes(tabName === 'bubble' ? 'Bubble' : tabName === 'memory' ? 'Memory' : 'Breathing')));
+  document.querySelectorAll('.game-pane').forEach(p => p.classList.toggle('active', p.id === 'pane-' + tabName));
+}
+
+function initMemory() {
+  const grid = document.getElementById('g-mem-grid');
+  if (!grid) return;
+  const emojis = ['🌱', '☀️', '🌙', '🌊', '🌼', '🧘', '📚', '🎧'];
+  const cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+  grid.innerHTML = '';
+  let firstCard = null;
+  let matched = 0;
+  let moves = 0;
+
+  cards.forEach((emoji, index) => {
+    const card = document.createElement('button');
+    card.className = 'gmcard';
+    card.type = 'button';
+    card.dataset.emoji = emoji;
+    card.textContent = '❔';
+    card.addEventListener('click', () => {
+      if (card.classList.contains('flip') || card.classList.contains('matched')) return;
+      card.classList.add('flip');
+      card.textContent = emoji;
+      if (!firstCard) {
+        firstCard = card;
+        return;
+      }
+      moves += 1;
+      document.getElementById('mem-moves').textContent = moves;
+      if (firstCard.dataset.emoji === emoji) {
+        card.classList.add('matched');
+        firstCard.classList.add('matched');
+        matched += 1;
+        document.getElementById('mem-matches').textContent = matched;
+        document.getElementById('mem-msg').textContent = matched === emojis.length ? 'Perfect reset — your focus is back.' : 'Nice match! Keep the rhythm going.';
+        firstCard = null;
+        if (matched === emojis.length) {
+          document.getElementById('mem-best').textContent = Math.max(Number(document.getElementById('mem-best').textContent || 0), moves);
+        }
+      } else {
+        document.getElementById('mem-msg').textContent = 'Not quite — try another pair.';
+        setTimeout(() => {
+          firstCard.textContent = '❔';
+          firstCard.classList.remove('flip');
+          card.textContent = '❔';
+          card.classList.remove('flip');
+          firstCard = null;
+        }, 550);
+      }
+    });
+    grid.appendChild(card);
+  });
+  document.getElementById('mem-moves').textContent = '0';
+  document.getElementById('mem-matches').textContent = '0';
+  document.getElementById('mem-msg').textContent = 'Match all the cards to clear your mind.';
+}
+
+function initColors() {
+  const palette = document.getElementById('g-color-palette');
+  if (!palette) return;
+  const colors = ['#028090', '#02c39a', '#f4c842', '#f39c12', '#e74c3c'];
+  palette.innerHTML = colors.map((c, i) => `<button class="col-swatch ${i === 0 ? 'active' : ''}" style="background:${c}" data-color="${c}" onclick="this.parentNode.querySelectorAll('.col-swatch').forEach(s => s.classList.remove('active')); this.classList.add('active'); document.getElementById('g-breath-orb').style.background = 'color-mix(in srgb, ' + c + ' 16%, white)';"></button>`).join('');
+}
+
+let breathingLoop = null;
+let breathingPhase = 0;
+let breathPattern = [4, 4, 4, 4];
+
+function startBreathingCycle() {
+  const orb = document.getElementById('g-breath-orb');
+  const word = document.getElementById('orb-word');
+  const count = document.getElementById('orb-count');
+  const dots = document.querySelectorAll('.phdot');
+  if (!orb) return;
+  clearInterval(breathingLoop);
+  const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+  breathingLoop = setInterval(() => {
+    const phase = phases[breathingPhase % 4];
+    const value = breathPattern[breathingPhase % 4];
+    word.textContent = phase;
+    count.textContent = value;
+    dots.forEach((dot, idx) => dot.classList.toggle('active', idx === breathingPhase % 4));
+    orb.style.transform = phase === 'Inhale' ? 'scale(1.2)' : phase === 'Exhale' ? 'scale(0.9)' : 'scale(1.06)';
+    orb.style.background = phase === 'Inhale' ? 'rgba(2,128,144,.16)' : phase === 'Exhale' ? 'rgba(2,195,154,.16)' : 'rgba(244,200,66,.15)';
+    breathingPhase += 1;
+  }, 1000);
+}
+
+function pauseBreathingCycle() {
+  clearInterval(breathingLoop);
+}
+
+document.addEventListener('click', (event) => {
+  const btn = event.target.closest('.pat-btn');
+  if (!btn) return;
+  document.querySelectorAll('.pat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const pattern = btn.dataset.pattern;
+  breathPattern = pattern.split('-').map(Number);
+  const msg = document.getElementById('breath-msg');
+  if (msg) msg.textContent = 'Pattern selected: ' + pattern + '. Start when you are ready.';
+});
+
+function initZenCanvas() {
+  const field = document.getElementById('g-bubble-field');
+  if (!field) return;
+  field.innerHTML = '';
+  const totalBubbles = 18;
+  for (let i = 0; i < totalBubbles; i += 1) {
+    const bubble = document.createElement('button');
+    bubble.type = 'button';
+    bubble.className = 'gbubble';
+    const size = 28 + Math.random() * 46;
+    bubble.style.width = size + 'px';
+    bubble.style.height = size + 'px';
+    bubble.style.left = Math.random() * 82 + '%';
+    bubble.style.top = Math.random() * 78 + '%';
+    bubble.style.background = ['rgba(2,128,144,.2)', 'rgba(2,195,154,.2)', 'rgba(244,200,66,.22)', 'rgba(0,168,150,.18)'][i % 4];
+    bubble.style.borderColor = ['#028090', '#02c39a', '#f4c842', '#00a896'][i % 4];
+    bubble.textContent = ['✨', '💫', '🌤️', '🌿'][i % 4];
+    bubble.addEventListener('click', () => {
+      const score = document.getElementById('bubble-score');
+      const time = document.getElementById('bubble-time');
+      const best = document.getElementById('bubble-best');
+      bubble.remove();
+      score.textContent = Number(score.textContent) + 10;
+      document.getElementById('g-score-total').textContent = score.textContent;
+      document.getElementById('bubble-msg').textContent = 'Nice — a little calm, a little clarity.';
+      if (Number(best.textContent) < Number(score.textContent)) { best.textContent = score.textContent; }
+      let remaining = Number(time.textContent);
+      if (remaining > 0) {
+        remaining -= 1;
+        time.textContent = remaining;
+      }
+      if (remaining <= 0) {
+        document.getElementById('bubble-msg').textContent = 'Session complete — great job taking a reset break.';
+      }
+    });
+    field.appendChild(bubble);
+  }
+}
+
+const bubbleTimer = setInterval(() => {
+  const timeEl = document.getElementById('bubble-time');
+  if (!timeEl) return;
+  let value = Number(timeEl.textContent);
+  if (value > 0) {
+    value -= 1;
+    timeEl.textContent = value;
+    if (value === 0) {
+      document.getElementById('bubble-msg').textContent = 'Time is up — take a stretch and return refreshed.';
+    }
+  }
+}, 1000);
+
+initMemory();
+initColors();
+initZenCanvas();
+</script>
+</body>
+</html>
