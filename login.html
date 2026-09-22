@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Digital Well-Being | Login</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef7f4, #f8fbfa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #24332f;
+}
+
+/* MAIN CONTAINER */
+
+.auth-container {
+    width: 1100px;
+    max-width: 95%;
+    min-height: 680px;
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    box-shadow: 0 25px 70px rgba(44, 76, 66, 0.15);
+}
+
+/* LEFT SIDE */
+
+.auth-left {
+    width: 45%;
+    background: linear-gradient(145deg, #173f35, #286b5a);
+    color: white;
+    padding: 55px 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-left::before {
+    content: "";
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    top: -120px;
+    right: -100px;
+}
+
+.auth-left::after {
+    content: "";
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    bottom: -80px;
+    left: -70px;
+}
+
+.logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+}
+
+.logo span {
+    color: #9de2c8;
+}
+
+.left-content {
+    position: relative;
+    z-index: 2;
+}
+
+.left-content h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 42px;
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.left-content p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #d5ebe4;
+    max-width: 420px;
+}
+
+.features {
+    margin-top: 30px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: #e3f3ee;
+}
+
+.feature-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* RIGHT SIDE */
+
+.auth-right {
+    width: 55%;
+    padding: 45px 55px;
+    position: relative;
+    overflow-y: auto;
+}
+
+.form-wrapper {
+    max-width: 460px;
+    margin: auto;
+}
+
+.tabs {
+    display: flex;
+    background: #f2f6f4;
+    border-radius: 12px;
+    padding: 5px;
+    margin-bottom: 35px;
+}
+
+.tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 12px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #71807b;
+    transition: 0.3s;
+}
+
+.tab.active {
+    background: white;
+    color: #286b5a;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+}
+
+.form-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.form-subtitle {
+    color: #7b8985;
+    font-size: 14px;
+    margin-bottom: 28px;
+}
+
+/* SOCIAL LOGIN */
+
+.social-buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.social-btn {
+    flex: 1;
+    height: 46px;
+    border: 1px solid #dfe7e3;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+    color: #34423e;
+    transition: 0.2s;
+}
+
+.social-btn:hover {
+    background: #f6faf8;
+    border-color: #b8cec5;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #9aa6a2;
+    font-size: 12px;
+    margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    height: 1px;
+    background: #e3e9e6;
+    flex: 1;
+}
+
+/* FORM */
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #34423e;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #dce5e1;
+    border-radius: 10px;
+    padding: 0 45px 0 14px;
+    outline: none;
+    font-size: 14px;
+    color: #293934;
+    transition: 0.2s;
+}
+
+.input-wrapper input:focus {
+    border-color: #3b8b73;
+    box-shadow: 0 0 0 3px rgba(59,139,115,0.1);
+}
+
+.input-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #8b9994;
+}
+
+/* PASSWORD STRENGTH */
+
+.password-strength {
+    margin-top: 7px;
+}
+
+.strength-bar {
+    height: 4px;
+    border-radius: 10px;
+    background: #e7ecea;
+    overflow: hidden;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0;
+    transition: 0.3s;
+}
+
+.strength-text {
+    font-size: 11px;
+    color: #8a9793;
+    margin-top: 4px;
+}
+
+/* OPTIONS */
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 4px 0 22px;
+    font-size: 12px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #66736f;
+}
+
+.checkbox input {
+    accent-color: #286b5a;
+}
+
+.forgot {
+    color: #286b5a;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* BUTTON */
+
+.primary-btn {
+    width: 100%;
+    height: 50px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #286b5a, #3d8c73);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(40,107,90,0.2);
+}
+
+/* SWITCH */
+
+.switch-text {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 13px;
+    color: #7c8985;
+}
+
+.switch-text span {
+    color: #286b5a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* TERMS */
+
+.terms {
+    font-size: 11px;
+    color: #899590;
+    line-height: 1.6;
+    margin-top: 18px;
+}
+
+.terms a {
+    color: #286b5a;
+    text-decoration: none;
+}
+
+/* HIDDEN */
+
+.hidden {
+    display: none !important;
+}
+
+/* MESSAGE */
+
+.message {
+    padding: 11px;
+    border-radius: 9px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    display: none;
+}
+
+.error {
+    background: #fff0f0;
+    color: #b33a3a;
+}
+
+.success {
+    background: #eef9f3;
+    color: #27734e;
+}
+
+/* OTP */
+
+.otp-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.otp-container input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid #dce5e1;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 20px;
+    outline: none;
+}
+
+.resend {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 12px;
+    color: #77847f;
+}
+
+.resend span {
+    color: #286b5a;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+
+    .auth-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .auth-left {
+        width: 100%;
+        padding: 35px;
+    }
+
+    .left-content h1 {
+        font-size: 32px;
+    }
+
+    .features {
+        display: none;
+    }
+
+    .auth-right {
+        width: 100%;
+        padding: 35px 25px;
+    }
+}
+
+@media(max-width: 480px) {
+
+    .auth-container {
+        max-width: 100%;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+
+    .auth-left {
+        padding: 30px 25px;
+    }
+
+    .auth-right {
+        padding: 30px 20px;
+    }
+
+    .social-buttons {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <!-- LEFT PANEL -->
+
+    <section class="auth-left">
+
+        <div class="logo">
+            Digital<span>Well</span>
+        </div>
+
+        <div class="left-content">
+
+            <h1>
+                Build a healthier
+                digital life.
+            </h1>
+
+            <p>
+                Balance learning, screen time and well-being
+                with intelligent insights designed for
+                hybrid learners.
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="feature-icon">◷</div>
+                    Smart screen-time tracking
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">♡</div>
+                    Mood & stress monitoring
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✦</div>
+                    AI-powered recommendations
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+                    Personalized learning balance
+                </div>
+
+            </div>
+
+        </div>
+
+        <div style="font-size:11px;color:#b9d5cc;">
+            © 2026 Digital Well-Being Ecosystem
+        </div>
+
+    </section>
+
+
+    <!-- RIGHT PANEL -->
+
+    <section class="auth-right">
+
+        <div class="form-wrapper">
+
+            <!-- TABS -->
+
+            <div class="tabs">
+
+                <button
+                    class="tab active"
+                    id="loginTab"
+                    onclick="showLogin()">
+                    Existing User
+                </button>
+
+                <button
+                    class="tab"
+                    id="registerTab"
+                    onclick="showRegister()">
+                    New User
+                </button>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <div id="loginForm">
+
+                <h2 class="form-title">
+                    Welcome back
+                </h2>
+
+                <p class="form-subtitle">
+                    Sign in to continue your well-being journey.
+                </p>
+
+                <div id="loginMessage" class="message"></div>
+
+                <!-- SOCIAL LOGIN -->
+
+                <div class="social-buttons">
+
+                    <button
+                        class="social-btn"
+                        onclick="socialLogin('Google')">
+                        G&nbsp; Google
+                    </button>
+
+                    <button
+                        class="social-btn"
+                        onclick="socialLogin('Apple')">
+                        &nbsp; Apple
+                    </button>
+
+                </div>
+
+                <div class="divider">
+                    OR CONTINUE WITH EMAIL
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label>Email address</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="email"
+                            id="loginEmail"
+                            placeholder="you@example.com">
+
+                        <span class="input-icon">✉</span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password">
+
+                        <span
+                            class="input-icon"
+                            onclick="togglePassword('loginPassword', this)">
+                            ◉
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-options">
+
+                    <label class="checkbox">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe">
+
+                        Remember me
+
+                    </label>
+
+                    <span
+                        class="forgot"
+                        onclick="showForgotPassword()">
+                        Forgot password?
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="loginUser()">
+                    Sign In
+                </button>
+
+
+                <div class="switch-text">
+
+                    Don't have an account?
+                    <span onclick="showRegister()">
+                        Create account
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- REGISTER FORM -->
+
+            <div id="registerForm" class="hidden">
+
+                <h2 class="form-title">
+                    Create your account
+                </h2>
+
+                <p class="form-subtitle">
+                    Start building a healthier digital routine.
+                </p>
+
+                <div id="registerMessage" class="message"></div>
+
+
+                <div class="social-buttons">
+
+                    <button
+                        class="social-btn"
+                        onclick="socialLogin('Google')">
+                        G&nbsp; Google
+                    </button>
+
+                    <button
+                        class="social-btn"
+                        onclick="socialLogin('Apple')">
+                        &nbsp; Apple
+                    </button>
+
+                </div>
+
+                <div class="divider">
+                    OR SIGN UP WITH EMAIL
+                </div>
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label>Full name</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="text"
+                            id="registerName"
+                            placeholder="Enter your full name">
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label>Email address</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="email"
+                            id="registerEmail"
+                            placeholder="you@example.com">
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label>Create password</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="registerPassword"
+                            placeholder="Create a strong password"
+                            oninput="checkPasswordStrength()">
+
+                        <span
+                            class="input-icon"
+                            onclick="togglePassword('registerPassword', this)">
+                            ◉
+                        </span>
+
+                    </div>
+
+                    <div class="password-strength">
+
+                        <div class="strength-bar">
+                            <div
+                                class="strength-fill"
+                                id="strengthFill">
+                            </div>
+                        </div>
+
+                        <div
+                            class="strength-text"
+                            id="strengthText">
+                            Use 8+ characters with numbers and symbols
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label>Confirm password</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Re-enter your password">
+
+                    </div>
+
+                </div>
+
+
+                <!-- TERMS -->
+
+                <label class="checkbox">
+
+                    <input
+                        type="checkbox"
+                        id="terms">
+
+                    <span>
+                        I agree to the
+                        <a href="#">Terms of Service</a>
+                        and
+                        <a href="#">Privacy Policy</a>.
+                    </span>
+
+                </label>
+
+                <br>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="registerUser()">
+                    Create Account
+                </button>
+
+
+                <div class="switch-text">
+
+                    Already have an account?
+                    <span onclick="showLogin()">
+                        Sign in
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORGOT PASSWORD -->
+
+            <div id="forgotForm" class="hidden">
+
+                <h2 class="form-title">
+                    Reset your password
+                </h2>
+
+                <p class="form-subtitle">
+                    Enter your registered email and we'll
+                    send you a verification code.
+                </p>
+
+                <div id="forgotMessage" class="message"></div>
+
+
+                <div class="form-group">
+
+                    <label>Email address</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="email"
+                            id="forgotEmail"
+                            placeholder="you@example.com">
+
+                        <span class="input-icon">✉</span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="sendOTP()">
+                    Send Verification Code
+                </button>
+
+
+                <div class="switch-text">
+
+                    Remember your password?
+                    <span onclick="showLogin()">
+                        Back to login
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- OTP FORM -->
+
+            <div id="otpForm" class="hidden">
+
+                <h2 class="form-title">
+                    Verify your email
+                </h2>
+
+                <p class="form-subtitle">
+                    Enter the 6-digit verification code
+                    sent to your email.
+                </p>
+
+
+                <div class="otp-container">
+
+                    <input maxlength="1">
+                    <input maxlength="1">
+                    <input maxlength="1">
+                    <input maxlength="1">
+                    <input maxlength="1">
+                    <input maxlength="1">
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    onclick="verifyOTP()">
+                    Verify Code
+                </button>
+
+
+                <div class="resend">
+
+                    Didn't receive the code?
+
+                    <span onclick="resendOTP()">
+                        Resend OTP
+                    </span>
+
+                </div>
+
+
+                <div class="switch-text">
+
+                    <span onclick="showForgotPassword()">
+                        Change email
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+/* --------------------------------
+   SWITCH LOGIN / REGISTER
+-------------------------------- */
+
+function showLogin() {
+
+    document.getElementById("loginForm")
+        .classList.remove("hidden");
+
+    document.getElementById("registerForm")
+        .classList.add("hidden");
+
+    document.getElementById("forgotForm")
+        .classList.add("hidden");
+
+    document.getElementById("otpForm")
+        .classList.add("hidden");
+
+    document.getElementById("loginTab")
+        .classList.add("active");
+
+    document.getElementById("registerTab")
+        .classList.remove("active");
+}
+
+
+function showRegister() {
+
+    document.getElementById("loginForm")
+        .classList.add("hidden");
+
+    document.getElementById("registerForm")
+        .classList.remove("hidden");
+
+    document.getElementById("forgotForm")
+        .classList.add("hidden");
+
+    document.getElementById("otpForm")
+        .classList.add("hidden");
+
+    document.getElementById("registerTab")
+        .classList.add("active");
+
+    document.getElementById("loginTab")
+        .classList.remove("active");
+}
+
+
+/* --------------------------------
+   FORGOT PASSWORD
+-------------------------------- */
+
+function showForgotPassword() {
+
+    document.getElementById("loginForm")
+        .classList.add("hidden");
+
+    document.getElementById("registerForm")
+        .classList.add("hidden");
+
+    document.getElementById("forgotForm")
+        .classList.remove("hidden");
+
+    document.getElementById("otpForm")
+        .classList.add("hidden");
+
+}
+
+
+/* --------------------------------
+   PASSWORD VISIBILITY
+-------------------------------- */
+
+function togglePassword(id, icon) {
+
+    const input = document.getElementById(id);
+
+    if (input.type === "password") {
+
+        input.type = "text";
+        icon.textContent = "◉";
+
+    } else {
+
+        input.type = "password";
+        icon.textContent = "◉";
+
+    }
+
+}
+
+
+/* --------------------------------
+   PASSWORD STRENGTH
+-------------------------------- */
+
+function checkPasswordStrength() {
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const fill =
+        document.getElementById("strengthFill");
+
+    const text =
+        document.getElementById("strengthText");
+
+    let score = 0;
+
+    if (password.length >= 8)
+        score++;
+
+    if (/[A-Z]/.test(password))
+        score++;
+
+    if (/[0-9]/.test(password))
+        score++;
+
+    if (/[^A-Za-z0-9]/.test(password))
+        score++;
+
+
+    if (score === 0) {
+
+        fill.style.width = "0%";
+        text.textContent =
+            "Use 8+ characters with numbers and symbols";
+
+    }
+
+    else if (score <= 1) {
+
+        fill.style.width = "25%";
+        text.textContent = "Weak password";
+
+    }
+
+    else if (score === 2) {
+
+        fill.style.width = "50%";
+        text.textContent = "Fair password";
+
+    }
+
+    else if (score === 3) {
+
+        fill.style.width = "75%";
+        text.textContent = "Good password";
+
+    }
+
+    else {
+
+        fill.style.width = "100%";
+        text.textContent = "Strong password";
+
+    }
+
+}
+
+
+/* --------------------------------
+   LOGIN
+-------------------------------- */
+
+function loginUser() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const message =
+        document.getElementById("loginMessage");
+
+
+    if (!email || !password) {
+
+        showMessage(
+            message,
+            "Please enter both email and password.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!validateEmail(email)) {
+
+        showMessage(
+            message,
+            "Please enter a valid email address.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /*
+       FRONTEND DEMO ONLY.
+
+       Replace this section with your backend API:
+
+       fetch("/api/login", {
+           method: "POST",
+           headers: {
+               "Content-Type": "application/json"
+           },
+           body: JSON.stringify({
+               email,
+               password
+           })
+       })
+    */
+
+
+    showMessage(
+        message,
+        "Login successful! Redirecting...",
+        "success"
+    );
+
+}
+
+
+/* --------------------------------
+   REGISTER
+-------------------------------- */
+
+function registerUser() {
+
+    const name =
+        document.getElementById("registerName").value.trim();
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const terms =
+        document.getElementById("terms").checked;
+
+    const message =
+        document.getElementById("registerMessage");
+
+
+    if (!name || !email || !password || !confirmPassword) {
+
+        showMessage(
+            message,
+            "Please fill in all required fields.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!validateEmail(email)) {
+
+        showMessage(
+            message,
+            "Please enter a valid email address.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (password.length < 8) {
+
+        showMessage(
+            message,
+            "Password must contain at least 8 characters.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        showMessage(
+            message,
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!terms) {
+
+        showMessage(
+            message,
+            "Please accept the Terms of Service and Privacy Policy.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        message,
+        "Account created successfully!",
+        "success"
+    );
+
+}
+
+
+/* --------------------------------
+   FORGOT PASSWORD / OTP
+-------------------------------- */
+
+function sendOTP() {
+
+    const email =
+        document.getElementById("forgotEmail").value.trim();
+
+    const message =
+        document.getElementById("forgotMessage");
+
+
+    if (!validateEmail(email)) {
+
+        showMessage(
+            message,
+            "Please enter a valid email address.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    document.getElementById("forgotForm")
+        .classList.add("hidden");
+
+    document.getElementById("otpForm")
+        .classList.remove("hidden");
+
+}
+
+
+function verifyOTP() {
+
+    const inputs =
+        document.querySelectorAll(".otp-container input");
+
+    let otp = "";
+
+    inputs.forEach(input => {
+        otp += input.value;
+    });
+
+
+    if (otp.length !== 6) {
+
+        alert("Please enter the complete 6-digit OTP.");
+
+        return;
+    }
+
+
+    alert(
+        "OTP verified successfully. You can now create a new password."
+    );
+
+}
+
+
+function resendOTP() {
+
+    alert("A new OTP has been sent to your email.");
+
+}
+
+
+/* --------------------------------
+   SOCIAL LOGIN
+-------------------------------- */
+
+function socialLogin(provider) {
+
+    alert(
+        provider +
+        " authentication will be connected to your backend."
+    );
+
+}
+
+
+/* --------------------------------
+   EMAIL VALIDATION
+-------------------------------- */
+
+function validateEmail(email) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+}
+
+
+/* --------------------------------
+   MESSAGE
+-------------------------------- */
+
+function showMessage(element, text, type) {
+
+    element.textContent = text;
+
+    element.className =
+        "message " + type;
+
+    element.style.display = "block";
+
+}
+
+
+/* --------------------------------
+   OTP AUTO MOVE
+-------------------------------- */
+
+document.querySelectorAll(
+    ".otp-container input"
+).forEach((input, index, inputs) => {
+
+    input.addEventListener("input", () => {
+
+        if (input.value && index < inputs.length - 1) {
+
+            inputs[index + 1].focus();
+
+        }
+
+    });
+
+
+    input.addEventListener("keydown", event => {
+
+        if (
+            event.key === "Backspace" &&
+            !input.value &&
+            index > 0
+        ) {
+
+            inputs[index - 1].focus();
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
